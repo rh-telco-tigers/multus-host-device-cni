@@ -47,6 +47,32 @@ $ oc get network-attachment-definitions -n networking-demos
 NAME      AGE
 multus2   10s
 ```
+Enable DHCP (Important)
+```
+oc edit networks.operator.openshift.io cluster
+```
+Add the following 
+```
+apiVersion: operator.openshift.io/v1
+kind: Network
+metadata:
+  name: cluster
+spec:
+  ...
+  additionalNetworks:
+  - name: dhcp-shim
+    namespace: default
+    type: Raw
+    rawCNIConfig: |-
+      {
+        "name": "dhcp-shim",
+        "cniVersion": "0.3.1",
+        "type": "bridge",
+        "ipam": {
+          "type": "dhcp"
+        }
+      }
+```      
 Now create the pod
 ```
 $ cat <<EOF | oc apply -f -
