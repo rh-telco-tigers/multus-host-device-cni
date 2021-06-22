@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod2
+  namespace: networking-demos
+  annotations:
+    k8s.v1.cni.cncf.io/networks: |-
+      [
+        {
+          "name": "multus2",
+          "namespace": "networking-demos",
+          "default-route": ["192.168.30.1"]
+        }
+      ]
+spec:
+  containers:
+  - name: example-pod
+    command: ["/bin/bash", "-c", "sleep 2000000000000"]
+    image: centos/tools
